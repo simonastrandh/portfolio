@@ -69,11 +69,44 @@ body {
 
 /* Återanvändbar "glas"-effekt */
 .glass {
-  background: var(--color-glass);
-  border: 1px solid var(--color-glass-border);
+  position: relative;
   border-radius: var(--radius-pill);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* Fyllning: lite ljusare nedtill, som i designen */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.3)
+  );
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  /* Djup: inre blänk upptill, mjuk skugga nedtill, glöd på insidan */
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.25),
+    inset 0 0 14px rgba(255, 255, 255, 0.12),
+    0 8px 24px rgba(0, 40, 90, 0.18);
+}
+
+/* Kant som är stark upptill/nedtill och svag på sidorna */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.15) 40%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0.8)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
 
 /* ===== Header ===== */
@@ -131,12 +164,12 @@ body {
 .nav {
   display: flex;
   gap: var(--space-sm);
-  padding: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   font-size: var(--font-size-nav);
 }
 
 .nav__item {
-  padding: var(--space-sm) var(--space-md);
+  padding: var(--space-md) var(--space-sm);
   border-radius: var(--radius-pill);
   cursor: default;
   transition: background-color 0.2s ease;
