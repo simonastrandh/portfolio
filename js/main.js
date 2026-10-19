@@ -1,3 +1,32 @@
+// ===== Färger för molnbakgrunden: dag och natt =====
+const CLOUD_COLORS = {
+  light: {
+    backgroundColor: 0xffffff,
+    skyColor: 0x68b8d7,
+    cloudColor: 0xadc1de,
+    cloudShadowColor: 0x183550,
+    sunColor: 0xff9919,
+    sunGlareColor: 0xff6633,
+    sunlightColor: 0xff9933
+  },
+  dark: {
+    backgroundColor: 0x0b1d3a,
+    skyColor: 0x0b1d3a,
+    cloudColor: 0x3a4a6b,
+    cloudShadowColor: 0x050b18,
+    sunColor: 0x8fa8d8,      // månen
+    sunGlareColor: 0x5a73b0,
+    sunlightColor: 0x7f95c9
+  }
+};
+
+const root = document.documentElement;
+const themeToggle = document.querySelector(".theme-toggle");
+
+function currentTheme() {
+  return root.dataset.theme === "dark" ? "dark" : "light";
+}
+
 // ===== Animerad molnbakgrund (Vanta.js Clouds) =====
 let vantaEffect = null;
 
@@ -16,13 +45,7 @@ function startBackground() {
       scale: 3.0,
       scaleMobile: 12.0,
       speed: 0.2,
-      backgroundColor: 0xffffff,
-      skyColor: 0x68b8d7,
-      cloudColor: 0xadc1de,
-      cloudShadowColor: 0x183550,
-      sunColor: 0xff9919,
-      sunGlareColor: 0xff6633,
-      sunlightColor: 0xff9933
+      ...CLOUD_COLORS[currentTheme()]
     });
   } catch (error) {
     // WebGL fungerar inte – reservfärgen används istället
@@ -47,6 +70,31 @@ function syncBackground() {
     startBackground();
   }
 }
+
+// ===== Mörkt läge =====
+function setTheme(theme) {
+  const isDark = theme === "dark";
+
+  if (isDark) {
+    root.dataset.theme = "dark";
+  } else {
+    delete root.dataset.theme;
+  }
+  themeToggle.setAttribute("aria-checked", String(isDark));
+
+  try {
+    localStorage.setItem("theme", theme);
+  } catch (e) {}
+
+  // Byt färger på molnen utan att starta om effekten
+  if (vantaEffect) vantaEffect.setOptions(CLOUD_COLORS[theme]);
+}
+
+themeToggle.addEventListener("click", () => {
+  setTheme(currentTheme() === "dark" ? "light" : "dark");
+});
+
+themeToggle.setAttribute("aria-checked", String(currentTheme() === "dark"));
 
 syncBackground();
 reducedMotion.addEventListener("change", syncBackground);

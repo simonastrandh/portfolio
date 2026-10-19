@@ -7,15 +7,29 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    // Sätter sparat tema direkt, så sidan inte blinkar ljus innan den blir mörk
+    try {
+      if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.dataset.theme = "dark";
+      }
+    } catch (e) {}
+  </script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="vanta-bg" aria-hidden="true"></div>
 
   <header class="site-header">
-    <div class="brand">
-      <p class="brand__name">Simon Strandh</p>
-      <p class="brand__role">UI / UX designer</p>
+    <div class="site-header__left">
+      <button class="theme-toggle glass" type="button" role="switch"
+              aria-checked="false" aria-label="Dark mode">
+        <span class="theme-toggle__knob"></span>
+      </button>
+      <div class="brand">
+        <p class="brand__name">Simon Strandh</p>
+        <p class="brand__role">UI / UX designer</p>
+      </div>
     </div>
     <p class="status glass">
       <span class="status__dot" aria-hidden="true"></span>
