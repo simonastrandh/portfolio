@@ -1,15 +1,35 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio</title>
+  <title>Simon Strandh – UI / UX designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main>
-    <p>Platshållare – portfolion byggs här.</p>
+  <header class="site-header">
+    <div class="brand">
+      <p class="brand__name">Simon Strandh</p>
+      <p class="brand__role">UI / UX designer</p>
+    </div>
+    <p class="status glass">
+      <span class="status__dot" aria-hidden="true"></span>
+      Available for work
+    </p>
+  </header>
+
+  <main class="hero">
+    <h1 class="hero__title">Design with passion.</h1>
+    <nav class="nav glass" aria-label="Main">
+      <span class="nav__item">Projects</span>
+      <span class="nav__item">About me</span>
+      <span class="nav__item">Contact</span>
+    </nav>
   </main>
+
   <script src="js/main.js"></script>
 </body>
 </html>
