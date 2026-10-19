@@ -1,7 +1,7 @@
 /* ===== Variabler ===== */
 :root {
   /* Färger */
-  --color-bg: #0a74b8;
+  --color-bg: #68b8d7; /* även reservfärg om Vanta inte laddas */
   --color-text: #ffffff;
   --color-glass: rgba(255, 255, 255, 0.2);
   --color-glass-hover: rgba(255, 255, 255, 0.3);
@@ -65,6 +65,14 @@ body {
   font-family: var(--font-main);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-regular);
+}
+
+/* Lager för den animerade bakgrunden (Vanta), ligger bakom allt */
+#vanta-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--color-bg);
 }
 
 /* Återanvändbar "glas"-effekt */
