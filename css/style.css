@@ -128,6 +128,10 @@ body {
   line-height: 1.3;
 }
 
+.brand {
+  text-shadow: none;
+}
+
 .brand__name {
   font-weight: var(--font-weight-bold);
 }
