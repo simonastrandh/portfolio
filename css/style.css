@@ -223,13 +223,13 @@ body {
 /* ===== Meny ===== */
 .nav {
   display: flex;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-md);
+  gap: var(--space-md);
+  padding: var(--space-xs) var(--space-lg);
   font-size: var(--font-size-nav);
 }
 
 .nav__item {
-  padding: var(--space-md) var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius-pill);
   cursor: default;
   transition: background-color 0.2s ease;
