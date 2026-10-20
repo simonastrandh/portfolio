@@ -819,8 +819,21 @@ a.nav__item {
   background: var(--btn-bg);
   color: var(--accent);
   font-size: 1.25rem;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Text för skärmläsare som inte syns visuellt */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .btn:focus-visible {
