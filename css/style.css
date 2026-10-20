@@ -8,8 +8,8 @@
 @property --shadow-near        { syntax: "<color>"; inherits: true; initial-value: rgba(10, 50, 90, 0.45); }
 @property --card-bg           { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.6); }
 @property --card-border       { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.7); }
-@property --card-text         { syntax: "<color>"; inherits: true; initial-value: #2f2f2f; }
-@property --card-muted        { syntax: "<color>"; inherits: true; initial-value: #666666; }
+@property --card-text         { syntax: "<color>"; inherits: true; initial-value: #1c1c1c; }
+@property --card-muted        { syntax: "<color>"; inherits: true; initial-value: #474747; }
 @property --shadow-far         { syntax: "<color>"; inherits: true; initial-value: rgba(10, 50, 90, 0.35); }
 
 /* ===== Variabler ===== */
@@ -23,8 +23,8 @@
   --shadow-near: rgba(10, 50, 90, 0.45);
   --card-bg: rgba(255, 255, 255, 0.6);
   --card-border: rgba(255, 255, 255, 0.7);
-  --card-text: #2f2f2f;
-  --card-muted: #666666;
+  --card-text: #1c1c1c;
+  --card-muted: #474747; /* WCAG AA: minst 5,3:1 mot kortet */
   --shadow-far: rgba(10, 50, 90, 0.35);
   --color-glass-hover: rgba(255, 255, 255, 0.3);
   --color-glass-border: rgba(255, 255, 255, 0.5);
@@ -75,7 +75,7 @@
   --card-bg: rgba(8, 18, 40, 0.55);
   --card-border: rgba(255, 255, 255, 0.25);
   --card-text: #f2f5fa;
-  --card-muted: #b4bfd2;
+  --card-muted: #e0e6f0; /* WCAG AA mot ljusaste månskenet */
   --shadow-far: rgba(0, 5, 20, 0.5);
 }
 
@@ -439,6 +439,22 @@ a.nav__item {
   border: 1px solid var(--card-border);
   color: var(--card-text);
   text-shadow: none;
+  box-shadow: 0 0 0 rgba(0, 30, 70, 0);
+  transition:
+    transform 0.45s var(--move-ease),
+    box-shadow 0.45s ease;
+}
+
+/* Hover: kortet lyfts lite och får en mjuk skugga, pilen glider framåt */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 1.25rem 2.5rem rgba(0, 30, 70, 0.25);
+  }
+
+  .card:hover .card__arrow {
+    transform: translate(0.2rem, -0.2rem);
+  }
 }
 
 .card__image {
@@ -511,6 +527,7 @@ a.nav__item {
   stroke-width: 1.5;
   stroke-linecap: round;
   stroke-linejoin: round;
+  transition: transform 0.45s var(--move-ease);
 }
 
 .card__date {
@@ -539,6 +556,8 @@ a.nav__item {
   .nav,
   .nav *,
   .page,
+  .card,
+  .card__arrow,
   .hero__title {
     transition-duration: 0.01s !important;
     transition-delay: 0s !important;
