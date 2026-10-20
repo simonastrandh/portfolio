@@ -692,6 +692,10 @@ a.nav__item {
   stroke-linejoin: round;
 }
 
+.section__icon--solid {
+  color: var(--accent);
+}
+
 .section p + p {
   margin-top: 1em;
 }
