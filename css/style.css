@@ -54,6 +54,7 @@
   --space-lg: 2.5rem;
   --space-xl: 4rem;
   --radius-pill: 999px;
+  --header-h: 5.25rem; /* sidhuvudets höjd, används för att placera menyn på startsidan */
   /* Animationstider: förflyttningen (upp/ner) och ikonens in-/utskjutning */
   --move-time: 1.1s;
   --move-ease: cubic-bezier(0.65, 0, 0.35, 1);
@@ -289,7 +290,7 @@ body {
 .nav {
   --nav-top: 1rem;
   /* Startläge = under rubriken: headerns höjd (ca 5.25rem) + luft + rubrikens höjd + avstånd */
-  --nav-top-home: calc(5.25rem + var(--hero-top) + 1.1 * var(--font-size-hero) + var(--space-xl));
+  --nav-top-home: calc(var(--header-h) + var(--hero-top) + 1.1 * var(--font-size-hero) + var(--space-xl));
   --nav-offset: calc(var(--nav-top-home) - var(--nav-top));
   --nav-px: 1.75rem;
   --nav-py: 0.5rem;
@@ -339,7 +340,7 @@ a.nav__item {
 .nav__item::before {
   content: "";
   position: absolute;
-  inset: 0.25rem calc(var(--item-px) - 0.875rem);
+  inset: 0.25rem max(0px, calc(var(--item-px) - 0.875rem));
   border-radius: 0.625rem;
   background: transparent;
   transition: background-color 0.2s ease;
@@ -389,7 +390,7 @@ a.nav__item {
 
 /* Ikonen skjuts ut först när menyn är framme */
 .is-subpage .nav__home {
-  width: 4rem;
+  width: var(--home-w, 4rem);
   opacity: 1;
   transition:
     width var(--icon-time) var(--move-ease) var(--move-time),
@@ -414,11 +415,12 @@ a.nav__item {
    Tillbaka väntar det på att ikonen skjutits ihop, precis som menyn. */
 .page {
   --page-delay: 0s;
+  --page-bottom: 3rem;
   position: fixed;
   inset: 0;
   z-index: 1;
   overflow-y: auto;
-  padding: var(--page-top, 8.25rem) 0 3rem;
+  padding: var(--page-top, 8.25rem) 0 var(--page-bottom);
   transform: translateY(110vh); /* standard: nedanför bild (startsidan) */
   pointer-events: none;
   visibility: hidden; /* sidor utanför bild ritas inte alls, det håller animationerna jämna */
@@ -729,7 +731,7 @@ a.nav__item {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: calc(100dvh - var(--page-top) - 3rem);
+  min-height: calc(100dvh - var(--page-top) - var(--page-bottom));
   padding: clamp(1.25rem, 4vh, 3.75rem) 5.4375rem;
   text-align: center;
 }
@@ -864,7 +866,7 @@ a.nav__item {
 }
 
 /* Låga skärmar: komprimera Contact-kortet så att det ryms utan scroll */
-@media (max-height: 780px) {
+@media (max-height: 780px), (max-width: 1040px) and (max-height: 860px) {
   .tile--lg { width: 4.5rem; height: 4.5rem; border-radius: 1rem; }
   .contact__title { margin-top: 0.75rem; font-size: 2rem; }
   .contact__text { margin-top: 0.75rem; font-size: 1.25rem; }
@@ -882,6 +884,102 @@ a.nav__item {
   .contact-row { height: 4.5rem; }
   .contact-row .tile { width: 2.75rem; height: 2.75rem; }
   .contact-row__value { font-size: 1.25rem; }
+}
+
+/* ===== Responsivt =====
+   Sidhuvudet (toggle, namn, "Available for work") göms när det inte längre får plats
+   bredvid menyn, ca 1030 px. Då syns bara menyn högst upp. */
+@media (max-width: 1040px) {
+  :root { --header-h: 0px; }
+  .site-header { display: none; }
+}
+
+/* Menyn krymper på små skärmar så att den alltid ryms */
+@media (max-width: 700px) {
+  .nav {
+    --nav-px: 1rem;
+    --item-px: 1.25rem;
+    --home-w: 3rem;
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .nav {
+    --nav-px: 0.5rem;
+    --item-px: 0.75rem;
+    --home-w: 2.5rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* --- Contact, mellanstor skärm (max 900 px): samma uppbyggnad, men tätare --- */
+@media (max-width: 900px) {
+  .page--contact { --page-top: 7rem; --page-bottom: 2rem; }
+
+  .panel--contact {
+    width: min(79.625rem, 100% - 2rem);
+    padding-inline: 2.5rem;
+  }
+
+  .tile--lg { width: 4.5rem; height: 4.5rem; }
+  .contact__title { font-size: 2rem; }
+  .contact__text { font-size: 1.25rem; }
+
+  .contact-rows { margin-top: clamp(1.5rem, 6vh, 3rem); }
+  .contact-row { height: 5.5rem; gap: 1.5rem; padding: 0 1.5rem; }
+  .contact-row .tile { width: 3.5rem; height: 3.5rem; }
+  .contact-row__label { font-size: 1rem; }
+  .contact-row__value { font-size: 1.5rem; }
+  .btn { width: 8.5rem; height: 2.5rem; font-size: 1.125rem; }
+}
+
+/* --- Contact, liten skärm (max 600 px): raderna staplas, knappen får full bredd --- */
+@media (max-width: 600px) {
+  .page--contact { --page-top: 5.5rem; --page-bottom: 1rem; }
+
+  .panel--contact {
+    width: calc(100% - 1.5rem);
+    padding: clamp(1rem, 3vh, 1.5rem) 1.25rem;
+  }
+
+  .tile--lg { width: 3.5rem; height: 3.5rem; border-radius: 0.875rem; }
+  .contact__title { margin-top: 0.75rem; font-size: 1.5rem; }
+  .contact__text { margin-top: 0.75rem; font-size: 1rem; line-height: 1.35; }
+
+  .contact-rows { margin-top: clamp(1rem, 4vh, 2rem); gap: 0.75rem; }
+
+  .contact-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "tile info"
+      "btn  btn";
+    align-items: center;
+    column-gap: 1rem;
+    row-gap: 0.75rem;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .contact-row .tile { grid-area: tile; width: 3rem; height: 3rem; border-radius: 0.75rem; }
+  .contact-row__info { grid-area: info; }
+  .contact-row .btn { grid-area: btn; width: 100%; }
+  .contact-row__label { font-size: 0.875rem; }
+  .contact-row__value { font-size: clamp(0.875rem, 4vw, 1.125rem); overflow-wrap: anywhere; }
+}
+
+/* Små och låga mobiler: komprimera så mycket som möjligt, så att kortet ryms utan scroll */
+@media (max-width: 600px) and (max-height: 700px) {
+  .panel--contact { padding-block: 0.875rem; }
+  .tile--lg { width: 2.75rem; height: 2.75rem; }
+  .contact__title { margin-top: 0.5rem; font-size: 1.25rem; }
+  .contact__text { margin-top: 0.5rem; font-size: 0.9375rem; line-height: 1.3; }
+  .contact-rows { margin-top: 0.875rem; gap: 0.5rem; }
+  .contact-row { padding: 0.625rem 0.875rem; row-gap: 0.5rem; }
+  .contact-row .tile { width: 2.5rem; height: 2.5rem; }
+  .contact-row .btn { height: 2.25rem; font-size: 1rem; }
+  .contact-row__label { font-size: 0.8125rem; }
 }
 
 /* Vid sidladdning direkt på #projects: hoppa över animationen */
