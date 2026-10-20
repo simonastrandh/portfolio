@@ -86,8 +86,45 @@ function setTheme(theme) {
     localStorage.setItem("theme", theme);
   } catch (e) {}
 
-  // Byt färger på molnen utan att starta om effekten
-  if (vantaEffect) vantaEffect.setOptions(CLOUD_COLORS[theme]);
+  fadeClouds(CLOUD_COLORS[theme]);
+}
+
+// Tona molnens färger över tid (Vanta byter annars direkt)
+const FADE_MS = 1000;
+let shownColors = { ...CLOUD_COLORS[currentTheme()] };
+let fadeFrame = null;
+
+function mixColor(from, to, t) {
+  let result = 0;
+  for (const shift of [16, 8, 0]) {
+    const a = (from >> shift) & 255;
+    const b = (to >> shift) & 255;
+    result |= Math.round(a + (b - a) * t) << shift;
+  }
+  return result;
+}
+
+function fadeClouds(target) {
+  cancelAnimationFrame(fadeFrame);
+  if (!vantaEffect) {
+    shownColors = { ...target };
+    return;
+  }
+
+  const start = { ...shownColors };
+  const duration = reducedMotion.matches ? 0 : FADE_MS;
+  const t0 = performance.now();
+
+  function step(now) {
+    const raw = duration ? Math.min((now - t0) / duration, 1) : 1;
+    const t = raw * raw * (3 - 2 * raw); // mjuk start och slut
+    for (const key in target) {
+      shownColors[key] = mixColor(start[key], target[key], t);
+    }
+    vantaEffect.setOptions(shownColors);
+    if (raw < 1) fadeFrame = requestAnimationFrame(step);
+  }
+  fadeFrame = requestAnimationFrame(step);
 }
 
 themeToggle.addEventListener("click", () => {

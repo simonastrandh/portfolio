@@ -1,3 +1,13 @@
+/* ===== Mjuk övergång mellan ljust och mörkt läge =====
+   @property gör att webbläsaren vet att variablerna är färger, och därför kan
+   tona mellan dem istället för att byta direkt. */
+@property --color-bg           { syntax: "<color>"; inherits: true; initial-value: #68b8d7; }
+@property --color-active       { syntax: "<color>"; inherits: true; initial-value: rgba(0, 50, 100, 0.3); }
+@property --color-glass-tint   { syntax: "<color>"; inherits: true; initial-value: rgba(10, 60, 100, 0.28); }
+@property --color-glass-hover  { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.3); }
+@property --shadow-near        { syntax: "<color>"; inherits: true; initial-value: rgba(10, 50, 90, 0.45); }
+@property --shadow-far         { syntax: "<color>"; inherits: true; initial-value: rgba(10, 50, 90, 0.35); }
+
 /* ===== Variabler ===== */
 :root {
   /* Färger */
@@ -6,7 +16,8 @@
   --color-glass: rgba(255, 255, 255, 0.2);
   --color-active: rgba(0, 50, 100, 0.3);
   --color-glass-tint: rgba(10, 60, 100, 0.28); /* mörkar glaset så vit text syns */
-  --text-shadow: 0 1px 2px rgba(10, 50, 90, 0.45), 0 2px 16px rgba(10, 50, 90, 0.35);
+  --shadow-near: rgba(10, 50, 90, 0.45);
+  --shadow-far: rgba(10, 50, 90, 0.35);
   --color-glass-hover: rgba(255, 255, 255, 0.3);
   --color-glass-border: rgba(255, 255, 255, 0.5);
   --color-online: #1ec21e;
@@ -31,6 +42,15 @@
   --move-time: 1.1s;
   --move-ease: cubic-bezier(0.65, 0, 0.35, 1);
   --icon-time: 0.7s;
+  --theme-time: 1s;
+
+  transition:
+    --color-bg var(--theme-time) ease,
+    --color-active var(--theme-time) ease,
+    --color-glass-tint var(--theme-time) ease,
+    --color-glass-hover var(--theme-time) ease,
+    --shadow-near var(--theme-time) ease,
+    --shadow-far var(--theme-time) ease;
 }
 
 /* Mörkt läge: byter bara värdena på variablerna */
@@ -39,7 +59,8 @@
   --color-glass-hover: rgba(255, 255, 255, 0.18);
   --color-active: rgba(0, 0, 20, 0.4);
   --color-glass-tint: rgba(2, 8, 28, 0.4);
-  --text-shadow: 0 1px 2px rgba(0, 5, 20, 0.6), 0 2px 16px rgba(0, 5, 20, 0.5);
+  --shadow-near: rgba(0, 5, 20, 0.6);
+  --shadow-far: rgba(0, 5, 20, 0.5);
 }
 
 /* ===== Reset ===== */
@@ -81,7 +102,7 @@ body {
   font-family: var(--font-main);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-regular);
-  text-shadow: var(--text-shadow); /* mjuk skugga ger vit text kontrast mot ljus himmel */
+  text-shadow: 0 1px 2px var(--shadow-near), 0 2px 16px var(--shadow-far); /* mjuk skugga ger vit text kontrast mot ljus himmel */
 }
 
 /* Lager för den animerade bakgrunden (Vanta), ligger bakom allt */
