@@ -683,8 +683,8 @@ a.nav__item {
 
 .section__icon {
   flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: auto;
+  height: 1em; /* samma höjd som rubriktexten bredvid */
   fill: none;
   stroke: var(--accent);
   stroke-width: 2.4;
