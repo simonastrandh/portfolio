@@ -138,6 +138,8 @@ themeToggle.setAttribute("aria-checked", String(currentTheme() === "dark"));
 const projectsLink = document.querySelector('.nav a[href="#projects"]');
 const homeLink = document.querySelector(".nav__home");
 
+const pages = document.querySelectorAll(".page");
+
 function renderPage() {
   const isProjects = location.hash === "#projects";
   document.body.classList.toggle("is-projects", isProjects);
@@ -147,6 +149,19 @@ function renderPage() {
     projectsLink.removeAttribute("aria-current");
   }
   homeLink.toggleAttribute("inert", !isProjects); // går inte att tabba till när den är dold
+
+  // Sidans innehåll åker upp/ner tillsammans med menyn
+  pages.forEach((page) => {
+    const active = page.dataset.route === location.hash;
+    page.classList.toggle("is-active", active);
+    page.toggleAttribute("inert", !active);
+    if (!active) {
+      // Börja överst nästa gång sidan öppnas, men först när den är utom synhåll
+      setTimeout(() => {
+        if (!page.classList.contains("is-active")) page.scrollTop = 0;
+      }, 2200);
+    }
+  });
 }
 
 // Första renderingen utan animation, annars glider menyn när sidan öppnas på #projects
