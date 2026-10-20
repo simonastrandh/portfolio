@@ -714,8 +714,14 @@ a.nav__item {
 }
 
 /* ===== Contact ===== */
+/* Kortet fyller hela höjden mellan menyn och nederkanten, så att man slipper scrolla.
+   Innehållet centreras, och avstånden krymper på lägre skärmar (vh) så att allt ryms. */
 .panel--contact {
-  padding: 3.75rem 5.4375rem 7.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100dvh - var(--page-top) - 3rem);
+  padding: clamp(1.25rem, 4vh, 3.75rem) 5.4375rem;
   text-align: center;
 }
 
@@ -776,9 +782,9 @@ a.nav__item {
 .contact-rows {
   list-style: none;
   padding: 0;
-  margin: 5rem 0 0;
+  margin: clamp(1.5rem, 7vh, 5rem) 0 0;
   display: grid;
-  gap: 1.25rem;
+  gap: clamp(0.75rem, 2vh, 1.25rem);
   text-align: left;
 }
 
@@ -846,6 +852,27 @@ a.nav__item {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 30, 70, 0.18);
   }
+}
+
+/* Låga skärmar: komprimera Contact-kortet så att det ryms utan scroll */
+@media (max-height: 780px) {
+  .tile--lg { width: 4.5rem; height: 4.5rem; border-radius: 1rem; }
+  .contact__title { margin-top: 0.75rem; font-size: 2rem; }
+  .contact__text { margin-top: 0.75rem; font-size: 1.25rem; }
+  .contact-row { height: 5.5rem; gap: 1.5rem; padding: 0 1.5rem; }
+  .contact-row .tile { width: 3.5rem; height: 3.5rem; }
+  .contact-row__label { font-size: 1rem; }
+  .contact-row__value { font-size: 1.5rem; }
+  .btn { height: 2.5rem; font-size: 1.125rem; }
+}
+
+@media (max-height: 640px) {
+  .tile--lg { width: 3.5rem; height: 3.5rem; }
+  .contact__title { font-size: 1.75rem; }
+  .contact__text { font-size: 1.125rem; }
+  .contact-row { height: 4.5rem; }
+  .contact-row .tile { width: 2.75rem; height: 2.75rem; }
+  .contact-row__value { font-size: 1.25rem; }
 }
 
 /* Vid sidladdning direkt på #projects: hoppa över animationen */
