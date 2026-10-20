@@ -72,7 +72,8 @@ function syncBackground() {
 }
 
 // ===== Mörkt läge =====
-function setTheme(theme) {
+// persist = false när temat byts av enhetens inställning (då ska inget val sparas)
+function setTheme(theme, persist = true) {
   const isDark = theme === "dark";
 
   if (isDark) {
@@ -82,9 +83,11 @@ function setTheme(theme) {
   }
   themeToggle.setAttribute("aria-checked", String(isDark));
 
-  try {
-    localStorage.setItem("theme", theme);
-  } catch (e) {}
+  if (persist) {
+    try {
+      localStorage.setItem("theme", theme);
+    } catch (e) {}
+  }
 
   fadeClouds(CLOUD_COLORS[theme]);
 }
@@ -132,6 +135,17 @@ themeToggle.addEventListener("click", () => {
 });
 
 themeToggle.setAttribute("aria-checked", String(currentTheme() === "dark"));
+
+// Följer enhetens tema om det ändras medan sidan är öppen (t.ex. automatiskt mörkt läge på kvällen),
+// men bara så länge besökaren inte har valt själv med knappen.
+const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+systemDark.addEventListener("change", (event) => {
+  let saved = null;
+  try {
+    saved = localStorage.getItem("theme");
+  } catch (e) {}
+  if (!saved) setTheme(event.matches ? "dark" : "light", false);
+});
 
 // ===== Sidbyte: startsida <-> Projects =====
 // Sidorna är olika "lägen" på samma sida, så att menyn kan animeras mjukt mellan dem.

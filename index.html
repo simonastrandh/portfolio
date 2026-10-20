@@ -22,11 +22,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <script>
-    // Sätter sparat tema direkt, så sidan inte blinkar ljus innan den blir mörk
+    // Väljer tema direkt, så sidan inte blinkar ljus innan den blir mörk.
+    // Ordning: 1) ett val man gjort själv med knappen (sparat), 2) annars enhetens tema.
     try {
-      if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.dataset.theme = "dark";
-      }
+      var saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (e) {}
+      var dark = saved ? saved === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (dark) document.documentElement.dataset.theme = "dark";
     } catch (e) {}
   </script>
   <link rel="stylesheet" href="css/style.css">
