@@ -142,6 +142,18 @@ const routes = pages.map((page) => page.dataset.route); // ordning = ordningen i
 
 let currentRoute = null;
 
+// Sidan ritas bara medan den rör sig. Bara sidans EGEN transform-transition får avsluta det:
+// transitionend bubblar upp från element inuti sidan (t.ex. kort som tonar vid hover),
+// och en avbruten transition (transitioncancel) får inte räknas.
+pages.forEach((page) => {
+  page.addEventListener("transitionend", (event) => {
+    if (event.target === page && event.propertyName === "transform") {
+      clearTimeout(page.movingTimer);
+      page.classList.remove("is-moving");
+    }
+  });
+});
+
 // Var ska en sida stå när man är på "route"?
 //  active = synlig, left/right = utanför bild åt sidan, below = utanför bild nedanför (startsidan)
 function stateFor(page, route) {
@@ -195,9 +207,10 @@ function renderPage(isFirst) {
   animated.forEach((page) => {
     // Sidan ritas bara medan den rör sig
     page.classList.add("is-moving");
-    const stopMoving = () => page.classList.remove("is-moving");
-    page.addEventListener("transitionend", stopMoving, { once: true });
-    setTimeout(stopMoving, 2500); // reserv om transitionend uteblir
+    // Reservtimer om ingen transition startar (t.ex. vid snabba byten fram och tillbaka).
+    // En gammal timer från ett tidigare byte får aldrig stänga av ett nytt.
+    clearTimeout(page.movingTimer);
+    page.movingTimer = setTimeout(() => page.classList.remove("is-moving"), 2500);
     // Tillbaka till startsidan väntar sidan på att ikonen skjutits ihop, precis som menyn
     page.style.setProperty("--page-delay", next === "#home" ? "var(--icon-time)" : "0s");
     setState(page, stateFor(page, next));
