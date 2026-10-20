@@ -135,28 +135,77 @@ themeToggle.setAttribute("aria-checked", String(currentTheme() === "dark"));
 
 // ===== Sidbyte: startsida <-> Projects =====
 // Sidorna är olika "lägen" på samma sida, så att menyn kan animeras mjukt mellan dem.
-const projectsLink = document.querySelector('.nav a[href="#projects"]');
+const navLinks = document.querySelectorAll(".nav a.nav__item");
 const homeLink = document.querySelector(".nav__home");
+const pages = [...document.querySelectorAll(".page")];
+const routes = pages.map((page) => page.dataset.route); // ordning = ordningen i menyn
 
-const pages = document.querySelectorAll(".page");
+let currentRoute = null;
 
-function renderPage() {
-  const isProjects = location.hash === "#projects";
-  document.body.classList.toggle("is-projects", isProjects);
-  if (isProjects) {
-    projectsLink.setAttribute("aria-current", "page");
-  } else {
-    projectsLink.removeAttribute("aria-current");
+// Var ska en sida stå när man är på "route"?
+//  active = synlig, left/right = utanför bild åt sidan, below = utanför bild nedanför (startsidan)
+function stateFor(page, route) {
+  if (!routes.includes(route)) return "below";
+  if (page.dataset.route === route) return "active";
+  return routes.indexOf(page.dataset.route) < routes.indexOf(route) ? "left" : "right";
+}
+
+function setState(page, state) {
+  page.classList.toggle("is-active", state === "active");
+  page.classList.toggle("is-left", state === "left");
+  page.classList.toggle("is-right", state === "right");
+  page.toggleAttribute("inert", state !== "active");
+}
+
+function renderPage(isFirst) {
+  const next = routes.includes(location.hash) ? location.hash : "#home";
+  const prev = currentRoute;
+  if (next === prev) return;
+  currentRoute = next;
+
+  // Menyn: hem-ikon och markering av aktiv sida
+  const onSubpage = next !== "#home";
+  document.body.classList.toggle("is-subpage", onSubpage);
+  homeLink.toggleAttribute("inert", !onSubpage); // går inte att tabba till när den är dold
+  navLinks.forEach((link) => {
+    if (link.getAttribute("href") === next) {
+      link.setAttribute("aria-current", "page");
+    } else {
+      link.removeAttribute("aria-current");
+    }
+  });
+
+  if (isFirst) {
+    pages.forEach((page) => setState(page, stateFor(page, next)));
+    return;
   }
-  homeLink.toggleAttribute("inert", !isProjects); // går inte att tabba till när den är dold
 
-  // Sidans innehåll åker upp/ner tillsammans med menyn
+  // Bara sidan vi lämnar och sidan vi går till animeras. Övriga hoppar direkt
+  // till sin plats, så de aldrig syns glida över skärmen.
+  const animated = pages.filter((page) => [prev, next].includes(page.dataset.route));
+  const instant = pages.filter((page) => !animated.includes(page));
+
+  instant.forEach((page) => {
+    page.style.transition = "none";
+    setState(page, stateFor(page, next));
+  });
+  void document.body.offsetWidth; // tvinga webbläsaren att räkna ut läget innan animationen startar
+  instant.forEach((page) => (page.style.transition = ""));
+
+  animated.forEach((page) => {
+    // Sidan ritas bara medan den rör sig
+    page.classList.add("is-moving");
+    const stopMoving = () => page.classList.remove("is-moving");
+    page.addEventListener("transitionend", stopMoving, { once: true });
+    setTimeout(stopMoving, 2500); // reserv om transitionend uteblir
+    // Tillbaka till startsidan väntar sidan på att ikonen skjutits ihop, precis som menyn
+    page.style.setProperty("--page-delay", next === "#home" ? "var(--icon-time)" : "0s");
+    setState(page, stateFor(page, next));
+  });
+
+  // Börja överst nästa gång en sida öppnas, men först när den är utom synhåll
   pages.forEach((page) => {
-    const active = page.dataset.route === location.hash;
-    page.classList.toggle("is-active", active);
-    page.toggleAttribute("inert", !active);
-    if (!active) {
-      // Börja överst nästa gång sidan öppnas, men först när den är utom synhåll
+    if (stateFor(page, next) !== "active") {
       setTimeout(() => {
         if (!page.classList.contains("is-active")) page.scrollTop = 0;
       }, 2200);
@@ -166,11 +215,11 @@ function renderPage() {
 
 // Första renderingen utan animation, annars glider menyn när sidan öppnas på #projects
 document.body.classList.add("no-transition");
-renderPage();
+renderPage(true);
 requestAnimationFrame(() =>
   requestAnimationFrame(() => document.body.classList.remove("no-transition"))
 );
-window.addEventListener("hashchange", renderPage);
+window.addEventListener("hashchange", () => renderPage(false));
 
 syncBackground();
 reducedMotion.addEventListener("change", syncBackground);
