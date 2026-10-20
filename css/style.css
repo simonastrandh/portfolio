@@ -11,6 +11,9 @@
 @property --card-text         { syntax: "<color>"; inherits: true; initial-value: #1c1c1c; }
 @property --card-muted        { syntax: "<color>"; inherits: true; initial-value: #474747; }
 @property --accent             { syntax: "<color>"; inherits: true; initial-value: #075d99; }
+@property --tile-bg            { syntax: "<color>"; inherits: true; initial-value: #9fdcff; }
+@property --row-bg             { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.45); }
+@property --btn-bg             { syntax: "<color>"; inherits: true; initial-value: rgba(255, 255, 255, 0.9); }
 @property --shadow-far         { syntax: "<color>"; inherits: true; initial-value: rgba(10, 50, 90, 0.35); }
 
 /* ===== Variabler ===== */
@@ -27,6 +30,9 @@
   --card-text: #1c1c1c;
   --card-muted: #474747; /* WCAG AA: minst 5,3:1 mot kortet */
   --accent: #075d99;
+  --tile-bg: #9fdcff;
+  --row-bg: rgba(255, 255, 255, 0.45);
+  --btn-bg: rgba(255, 255, 255, 0.9);
   --shadow-far: rgba(10, 50, 90, 0.35);
   --color-glass-hover: rgba(255, 255, 255, 0.3);
   --color-glass-border: rgba(255, 255, 255, 0.5);
@@ -65,7 +71,10 @@
     --card-border var(--theme-time) ease,
     --card-text var(--theme-time) ease,
     --card-muted var(--theme-time) ease,
-    --accent var(--theme-time) ease;
+    --accent var(--theme-time) ease,
+    --tile-bg var(--theme-time) ease,
+    --row-bg var(--theme-time) ease,
+    --btn-bg var(--theme-time) ease;
 }
 
 /* Mörkt läge: byter bara värdena på variablerna */
@@ -80,6 +89,9 @@
   --card-text: #f2f5fa;
   --card-muted: #e0e6f0; /* WCAG AA mot ljusaste månskenet */
   --accent: #7cc0f5;
+  --tile-bg: rgba(124, 192, 245, 0.25);
+  --row-bg: rgba(255, 255, 255, 0.07);
+  --btn-bg: rgba(255, 255, 255, 0.14);
   --shadow-far: rgba(0, 5, 20, 0.5);
 }
 
@@ -559,7 +571,8 @@ a.nav__item {
 }
 
 /* ===== About me ===== */
-.page--about {
+.page--about,
+.page--contact {
   --page-top: 8.4375rem;
 }
 
@@ -700,6 +713,128 @@ a.nav__item {
   margin-top: 1em;
 }
 
+/* ===== Contact ===== */
+.panel--contact {
+  padding: 3.75rem 5.4375rem 7.25rem;
+  text-align: center;
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 4.375rem;
+  height: 4.375rem;
+  border-radius: 1rem;
+  background: var(--tile-bg);
+  color: var(--accent);
+}
+
+.tile svg {
+  width: 50%;
+  height: 50%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tile svg.tile__solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+.tile--lg {
+  width: 5.625rem;
+  height: 5.625rem;
+  margin: 0 auto;
+  border-radius: 1.25rem;
+}
+
+.tile--lg svg {
+  width: 45%;
+  height: 45%;
+  stroke-width: 1.3;
+}
+
+.contact__title {
+  margin-top: 1.125rem;
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+.contact__text {
+  max-width: 68.75rem;
+  margin: 1.25rem auto 0;
+  font-size: 1.625rem;
+  line-height: 1.2;
+  color: var(--card-muted);
+}
+
+.contact-rows {
+  list-style: none;
+  padding: 0;
+  margin: 5rem 0 0;
+  display: grid;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 0 2.5rem;
+  height: 6.875rem;
+  border: 1px solid var(--card-border);
+  border-radius: 1.25rem;
+  background: var(--row-bg);
+}
+
+.contact-row__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-row__label {
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: var(--card-muted);
+}
+
+.contact-row__value {
+  font-size: 1.75rem;
+  line-height: 1.3;
+  color: var(--card-text);
+}
+
+.btn {
+  flex-shrink: 0;
+  width: 10rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: var(--btn-bg);
+  color: var(--accent);
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 30, 70, 0.18);
+  }
+}
+
 /* Vid sidladdning direkt på #projects: hoppa över animationen */
 .no-transition,
 .no-transition *,
@@ -713,6 +848,7 @@ a.nav__item {
   .nav,
   .nav *,
   .page,
+  .btn,
   .card,
   .card__arrow,
   .hero__title {

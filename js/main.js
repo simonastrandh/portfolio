@@ -237,3 +237,27 @@ window.addEventListener("hashchange", () => renderPage(false));
 syncBackground();
 reducedMotion.addEventListener("change", syncBackground);
 window.addEventListener("pagehide", stopBackground);
+
+// ===== Copy-knappar (kopierar t.ex. e-postadressen) =====
+document.querySelectorAll("[data-copy]").forEach((button) => {
+  const label = button.textContent;
+  button.addEventListener("click", async () => {
+    const text = button.dataset.copy;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      // Reserv för webbläsare/lägen där Clipboard API inte är tillgängligt (t.ex. file://)
+      const field = document.createElement("textarea");
+      field.value = text;
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      field.select();
+      document.execCommand("copy");
+      field.remove();
+    }
+    button.textContent = "Copied!";
+    clearTimeout(button.resetTimer);
+    button.resetTimer = setTimeout(() => (button.textContent = label), 1800);
+  });
+});
