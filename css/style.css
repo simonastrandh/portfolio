@@ -1015,6 +1015,63 @@ a.nav__item {
   .contact-row__label { font-size: 0.8125rem; }
 }
 
+/* Meddelande på korten: korten leder ingenstans än, så vid hover, klick/tryck eller fokus
+   visas en notis på bilden om att projektet fortfarande utvecklas. */
+.card__notice {
+  position: absolute;
+  left: 50%;
+  bottom: 0.75rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: max-content;
+  max-width: calc(100% - 1.5rem);
+  padding: 0.5rem 0.875rem;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: var(--font-size-small);
+  line-height: 1.3;
+  text-align: left;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 0.5rem);
+  transition: opacity 0.3s ease, transform 0.3s var(--move-ease);
+}
+
+.card__notice svg {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.card.is-notice .card__notice,
+.card:focus-visible .card__notice {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (hover: hover) {
+  .card:hover .card__notice {
+    opacity: 1;
+    transform: translate(-50%, 0);
+    transition-delay: 0.15s; /* så den inte blinkar till när musen bara passerar */
+  }
+}
+
+.card:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
 /* --- Projects: 3 kort i bredd, sedan 2, sedan 1 när korten blir för smala (ca 300 px) --- */
 @media (max-width: 1040px) {
   .cards {
@@ -1090,6 +1147,7 @@ a.nav__item {
   .page,
   .btn,
   .card,
+  .card__notice,
   .card__arrow,
   .hero__title {
     transition-duration: 0.01s !important;

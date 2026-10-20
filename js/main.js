@@ -261,3 +261,20 @@ document.querySelectorAll("[data-copy]").forEach((button) => {
     button.resetTimer = setTimeout(() => (button.textContent = label), 1800);
   });
 });
+
+// ===== Projektkorten leder ingenstans än: visa ett meddelande vid klick, tryck eller Enter/mellanslag =====
+document.querySelectorAll(".card").forEach((card) => {
+  const showNotice = () => {
+    card.classList.add("is-notice");
+    clearTimeout(card.noticeTimer);
+    card.noticeTimer = setTimeout(() => card.classList.remove("is-notice"), 2600);
+  };
+
+  card.addEventListener("click", showNotice);
+  card.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      showNotice();
+    }
+  });
+});
