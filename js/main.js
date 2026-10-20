@@ -96,6 +96,30 @@ themeToggle.addEventListener("click", () => {
 
 themeToggle.setAttribute("aria-checked", String(currentTheme() === "dark"));
 
+// ===== Sidbyte: startsida <-> Projects =====
+// Sidorna är olika "lägen" på samma sida, så att menyn kan animeras mjukt mellan dem.
+const projectsLink = document.querySelector('.nav a[href="#projects"]');
+const homeLink = document.querySelector(".nav__home");
+
+function renderPage() {
+  const isProjects = location.hash === "#projects";
+  document.body.classList.toggle("is-projects", isProjects);
+  if (isProjects) {
+    projectsLink.setAttribute("aria-current", "page");
+  } else {
+    projectsLink.removeAttribute("aria-current");
+  }
+  homeLink.toggleAttribute("inert", !isProjects); // går inte att tabba till när den är dold
+}
+
+// Första renderingen utan animation, annars glider menyn när sidan öppnas på #projects
+document.body.classList.add("no-transition");
+renderPage();
+requestAnimationFrame(() =>
+  requestAnimationFrame(() => document.body.classList.remove("no-transition"))
+);
+window.addEventListener("hashchange", renderPage);
+
 syncBackground();
 reducedMotion.addEventListener("change", syncBackground);
 window.addEventListener("pagehide", stopBackground);
