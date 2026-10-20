@@ -128,8 +128,19 @@ a {
 }
 
 /* ===== Grund ===== */
+/* Själva sidan scrollar aldrig: varje sida (Projects, About me, Contact) scrollar i sitt eget lager.
+   På mobil är 100vh högre än det synliga området (adressfältet), vilket annars gör att
+   startsidan går att dra upp och ned. Därför låses sidan i fönstret. */
+html {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 body {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-main);
@@ -436,6 +447,7 @@ a.nav__item {
   inset: 0;
   z-index: 1;
   overflow-y: auto;
+  overscroll-behavior: contain; /* scrollen fortsätter aldrig ut till resten av sidan */
   padding: var(--page-top, 8.25rem) 0 var(--page-bottom);
   transform: translateY(110vh); /* standard: nedanför bild (startsidan) */
   pointer-events: none;
