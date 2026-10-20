@@ -491,6 +491,15 @@ a.nav__item {
   background: #919191; /* platshållare tills projektbilderna finns */
 }
 
+.card__image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%; /* behåller laptopskärmen i bild när bilden beskärs */
+}
+
 .tags {
   list-style: none;
   padding: 0;
