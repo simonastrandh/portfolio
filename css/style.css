@@ -505,7 +505,7 @@ a.nav__item {
 .card__image {
   position: relative;
   flex-shrink: 0;
-  height: 11.25rem;
+  aspect-ratio: 398 / 180; /* som i designen, och följer kortets bredd */
   background: #919191; /* platshållare tills projektbilderna finns */
 }
 
@@ -1013,6 +1013,33 @@ a.nav__item {
   .contact-row .tile { width: 2.5rem; height: 2.5rem; }
   .contact-row .btn { height: 2.25rem; font-size: 1rem; }
   .contact-row__label { font-size: 0.8125rem; }
+}
+
+/* --- Projects: 3 kort i bredd, sedan 2, sedan 1 när korten blir för smala (ca 300 px) --- */
+@media (max-width: 1040px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    width: min(79.625rem, 100% - 2rem);
+  }
+}
+
+@media (max-width: 700px) {
+  .page--projects { --page-top: 6.5rem; --page-bottom: 2rem; }
+  .page--projects .page__title { font-size: 2rem; padding-inline: 1rem; }
+
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+    max-width: 36rem;
+    margin-top: 1.75rem;
+  }
+}
+
+@media (max-width: 440px) {
+  .page--projects .page__title { font-size: 1.75rem; }
+  .card__title { font-size: 1.5rem; }
+  .card__body { padding: 2.25rem 1rem 1.25rem; }
 }
 
 /* Vid sidladdning direkt på #projects: hoppa över animationen */
