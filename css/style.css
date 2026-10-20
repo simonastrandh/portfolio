@@ -500,10 +500,6 @@ a.nav__item {
   object-position: 50% 22%; /* behåller laptopskärmen i bild när bilden beskärs */
 }
 
-.card__image .card__img--trip {
-  object-position: 50% 68%; /* visar notiserna längst ner på båda låsskärmarna */
-}
-
 .tags {
   list-style: none;
   padding: 0;
