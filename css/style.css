@@ -190,18 +190,34 @@ body {
 .site-header {
   position: relative;
   z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  /* Tre delar: [toggle] [namn] ........ ["Available for work"]. Kolumn 3 fyller ut mellanrummet. */
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: start;
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-small);
   line-height: 1.3;
+  transition: opacity 0.5s ease 0.9s, visibility 0s linear 0.9s;
 }
 
+/* Omslaget används bara för gruppering i HTML, toggle och namn placeras direkt i rutnätet */
 .site-header__left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
+  display: contents;
+}
+
+.theme-toggle {
+  grid-column: 1;
+  align-self: center;
+}
+
+.brand {
+  grid-column: 2;
+  align-self: center;
+  margin-left: 20px; /* 20 px mellan toggle och namn */
+}
+
+.status {
+  grid-column: 4;
 }
 
 .brand {
@@ -887,11 +903,28 @@ a.nav__item {
 }
 
 /* ===== Responsivt =====
-   Sidhuvudet (toggle, namn, "Available for work") göms när det inte längre får plats
-   bredvid menyn, ca 1030 px. Då syns bara menyn högst upp. */
+   Startsidan: sidhuvudet syns alltid, eftersom menyn ligger längre ner där.
+   Plats saknas på riktigt små skärmar: då tas bara "Available for work" bort, och namnet
+   flyttas till högra hörnet (toggle stannar till vänster). */
+@media (max-width: 480px) {
+  .site-header { grid-template-columns: auto 1fr auto; }
+  .status { display: none; }
+  .brand { grid-column: 3; margin-left: 0; text-align: right; }
+}
+
+@media (max-width: 600px) {
+  .site-header { padding: 1rem 1.25rem; }
+}
+
+/* Övriga sidor: menyn ligger högst upp och sidhuvudet får inte plats bredvid den under
+   ca 1030 px. Då tonas det ut, och tillbaka in när man går till startsidan igen. */
 @media (max-width: 1040px) {
-  :root { --header-h: 0px; }
-  .site-header { display: none; }
+  .is-subpage .site-header {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+  }
 }
 
 /* Menyn krymper på små skärmar så att den alltid ryms */
